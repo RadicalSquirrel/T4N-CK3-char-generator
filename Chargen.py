@@ -317,6 +317,7 @@ def main():
     char_dynn = random.choice(dynasties_list)
     # Education Trait
     char_edu_trait = random.choice(education_traits_list)
+    char_edu_trait = f"trait = {char_edu_trait}"
     # Random amount of personality traits
     char_personality_traits_amount = random.choice(range(3, 6))
     char_personality_traits_list = []
@@ -328,11 +329,11 @@ def main():
         else:
             break
 
-    if len(char_personality_traits_list) == 2:  # otherwise python shits and dies
+    if len(char_personality_traits_list) == 4:  # otherwise python shits and dies
         char_personality_traits_list.append("a")
         char_personality_traits_list.append("a")
 
-    elif len(char_personality_traits_list) == 3:
+    elif len(char_personality_traits_list) == 5:
         char_personality_traits_list.append("a")
 
     if char_personality_traits_amount == 3:
@@ -418,32 +419,25 @@ def main():
             char_id_number_stringed = "." + str(char_id_number)
             char_id = inputed_id + char_id_number_stringed
 
-        # Its isn't the preetiest way to do this but its still better than bunch of prints - Typical
+        # Bah this the only way to make this crap append - Typical
 
-        output_string = f"""#history
-    {char_id} = {left_curly_brace} 
-        name = {name}
-        {is_female_string}
-        culture = {char_culture}
-        faith = {char_faith}
-        dynasty = {char_dynn}
-        sexuality = {char_sexuality}
-        {char_personality_traits_list}
-        {birthdate[iterate]}.{randombirthmonth}.{randombirthday} = {left_curly_brace}
-            birth = yes
-            effect = {left_curly_brace}
-            {right_curly_brace}
-        {right_curly_brace}
-        {marriagedupe[iterate]}.{randommarriagemonth}.{randommarriageday} = {left_curly_brace}
-            effect = {left_curly_brace}
-                marry = 
-            {right_curly_brace}
-        {right_curly_brace}
-        {deathdate[iterate]}.{randomdeathmonth}.{randomdeathday} = {left_curly_brace}
-            death = yes
-        {right_curly_brace}
-    {right_curly_brace}
-        """
+        output_line_1 = f"#history \n{char_id} = {left_curly_brace}\n"
+        output_line_2 = f"\tname = {name} \n\t{is_female_string}\n\tdisallow_random_traits = yes\n"
+        output_line_3 = f"\tculture = {char_culture} \n\tfaith = {char_faith}\n"
+        output_line_4 = f"\tdynasty = {char_dynn} \n\tsexuality = {char_sexuality}\n\t"
+        output_line_traits = f"#Education\n\t{char_edu_trait}\n\t#Personality\n\t{char_personality_traits_list}"
+        output_line_effect = f"{birthdate[iterate]}.{randombirthmonth}.{randombirthday} = {left_curly_brace} " \
+                             f"\n\t\tbirth = yes \n\t\teffect = {left_curly_brace} \n\t\t{right_curly_brace} " \
+                             f"\n\t{right_curly_brace}\n"
+        output_line_marriage = f"\t{marriagedupe[iterate]}.{randommarriagemonth}.{randommarriageday} = {left_curly_brace}" \
+                               f"\n\t\teffect = {left_curly_brace} \n\t\t\tmarry = " \
+                               f"\n\t\t{right_curly_brace}\n\t{right_curly_brace}\n"
+        output_line_death = f"\t{deathdate[iterate]}.{randomdeathmonth}.{randomdeathday} = {left_curly_brace} " \
+                            f"\n\t\tdeath = yes \n\t{right_curly_brace} \n{right_curly_brace}\n\n"
+
+        #output_string = [output_line_1, output_line_2, output_line_3, output_line_4, output_line_personality_traits,
+                         #output_line_effect, output_line_marriage, output_line_death]
+        #output_string = str(output_string)
 
         if not os.path.exists(pathname + "/output.txt"):
             with open('output.txt', 'x') as output_file:
@@ -454,7 +448,7 @@ def main():
             bool_for_write = input("The Output file already exists do you wish to override it? ")
             # take only the first letter of the answer and convert it to lowercase for easy comparison
             bool_for_write = bool_for_write.strip()[:1].lower()
-            print(bool_for_write)
+            #print(bool_for_write)
             if not bool_for_write == "y" and not bool_for_write == "n":
                 while not bool_for_write == "y" and not bool_for_write == "n":
 
@@ -464,33 +458,33 @@ def main():
                     bool_for_write = bool_for_write.strip()[:1].lower()
                     if bool_for_write == "y":
                         with open('output.txt', 'w') as output_file:
-                            print(output_string, file=output_file)
-                            output_file.close()
+                            output_file.writelines([output_line_1, output_line_2, output_line_3, output_line_4,
+                                                    output_line_traits, output_line_effect,
+                                                    output_line_marriage,
+                                                    output_line_death])
                         break
-
-                    # TODO MAKE THIS APPEND MULTI LINE STRINGS - Typical
 
                     elif bool_for_write == "n":
                         with open('output.txt', 'a') as output_file:
-                            # output_file.seek(0, os.SEEK_END)
-                            output_file.write("\n")
-                            output_file.write(output_string)
-                            # output_file.truncate()
-                            output_file.close()
+                            output_file.writelines([output_line_1, output_line_2, output_line_3, output_line_4,
+                                                    output_line_traits, output_line_effect,
+                                                    output_line_marriage,
+                                                    output_line_death])
                         break
                     else:
                         bool_for_write = "Answer is invalid"
             else:
                 if bool_for_write == "y":
                     with open('output.txt', 'w') as output_file:
-                        output_file.write(output_string)
+                        output_file.writelines([output_line_1, output_line_2, output_line_3, output_line_4,
+                                               output_line_traits, output_line_effect, output_line_marriage,
+                                               output_line_death ])
                         output_file.close()
                 elif bool_for_write == "n":
                     with open('output.txt', 'a') as output_file:
-                        # output_file.seek(0, os.SEEK_END)
-                        output_file.write("\n")
-                        output_file.write(output_string)
-                        # output_file.truncate()
+                        output_file.writelines([output_line_1, output_line_2, output_line_3, output_line_4,
+                                               output_line_traits, output_line_effect, output_line_marriage,
+                                               output_line_death ])
                         output_file.close()
         iterate += 1
         if inputed_id.isnumeric():
