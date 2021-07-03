@@ -416,7 +416,7 @@ def main():
         if inputed_id.isnumeric():
             char_id = inputed_id
         else:
-            char_id_number_stringed = "." + str(char_id_number)
+            char_id_number_stringed = "_" + str(char_id_number)
             char_id = inputed_id + char_id_number_stringed
 
         # Bah this the only way to make this crap append - Typical
